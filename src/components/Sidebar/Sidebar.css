@@ -1,0 +1,93 @@
+.catalog-sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px; /* Чуть мягче углы как на макете */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  margin-left: 100px;
+  
+}
+
+.sidebar-title {
+  padding: 22px 20px;
+  font-weight: 800;    /* Жирнее заголовок */
+  font-size: 22px;     /* Крупнее */
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-item {
+  padding: 16px 20px;  /* Увеличили высоту пунктов */
+}
+
+.menu-label {
+  font-size: 17px;     /* Шрифт стал серьезнее */
+  font-weight: 600;    /* Чуть жирнее */
+  color: #444;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  width: 28px;
+}
+
+.subcategory-item {
+  padding: 10px 20px 10px 64px; /* Увеличили отступы внутри подкатегорий */
+  font-size: 15px;
+  color: #777;
+}
+
+.subcategory-item:hover {
+  background: #fff9f0; /* Легкий фон при наведении */
+  color: #f39c12;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f9f9f9;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-item:hover {
+  background-color: #fcfcfc;
+  color: #f39c12; /* Оранжевый акцент как на твоем скрине */
+}
+
+.menu-item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.menu-label {
+  font-size: 14px;
+}
+
+.subcategory-list {
+  list-style: none;
+  background-color: #fcfcfc;
+  padding: 10px 0;
+  margin: 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+
+.menu-arrow {
+  transition: transform 0.3s; /* Плавный поворот стрелочки */
+}
+
+.menu-arrow.rotated {
+  transform: rotate(90deg);
+}

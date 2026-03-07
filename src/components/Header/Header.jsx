@@ -13,10 +13,8 @@ const Header = () => {
     <AppBar position="static" sx={{ bgcolor: '#fff', color: '#000', boxShadow: 'none' }}>
       <Container maxWidth="xl">
         
-        {/* ВЕРХНИЙ РЯД: Лого, Поиск, Контакты, Иконки */}
         <Toolbar sx={{ justifyContent: 'space-between', py: 2, px: '0 !important' }}>
           
-          {/* 1. Логотип */}
           <Box sx={{ minWidth: '180px' }}>
             <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-1px', mb: -0.5 }}>
               Best<Box component="span" sx={{ color: '#333' }}>Mebel</Box>
@@ -26,7 +24,7 @@ const Header = () => {
             </Typography>
           </Box>
 
-          {/* 2. Поиск */}
+          {/* Поиск */}
           <Box sx={{ 
             flexGrow: 1, 
             mx: 4, 
@@ -39,13 +37,13 @@ const Header = () => {
             height: '45px'
           }}>
             <InputBase 
-              placeholder="Поиск среди 50 000 изделий" 
+              placeholder="Поиск среди 500 изделий" 
               sx={{ flex: 1, fontSize: '14px' }} 
             />
             <Search sx={{ color: '#ccc' }} />
           </Box>
 
-          {/* 3. Информация и Контакты */}
+          {/* Информация и Контакты */}
           <Stack direction="row" spacing={3} alignItems="center" sx={{ mr: 3 }}>
             <Box>
               <Typography sx={{ fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
@@ -84,7 +82,7 @@ const Header = () => {
             Заказать звонок
           </Button>
 
-          {/* 5. Иконки действий */}
+          {/* Иконки действий */}
           <Stack direction="row" spacing={0.5}>
             <IconButton><FavoriteBorder sx={{ color: '#333' }} /></IconButton>
             <IconButton><BarChart sx={{ color: '#333' }} /></IconButton>
@@ -107,7 +105,7 @@ const Header = () => {
             </IconButton>
             {[
               'Каталог', 'О фабрике', 'Новости магазина', 'Оплата', 'Доставка', 
-              'Сборка', 'Гарантия', 'Контакты', 'Вопрос-ответ', 'Сертификаты и дипломы', 'Статьи'
+              'Сборка', 'Гарантия', 'Контакты', 'Вопрос-ответ', 'Статьи', 'Сертификаты и дипломы'
             ].map((text) => (
               <Typography 
                 key={text} 
@@ -115,12 +113,12 @@ const Header = () => {
                 sx={{ 
                   cursor: 'pointer', 
                   fontSize: '14px',
-                  fontWeight: text === 'Акции' ? 'bold' : '500',
-                  color: text === 'Акции' ? '#ff6b00' : '#333',
+                  fontWeight: text === 'Сертификаты и дипломы' ? 'bold' : '500',
+                  color: text === 'Сертификаты и дипломы' ? '#000000' : '#333',
                   '&:hover': { color: '#ff6b00' }
                 }}
               >
-                {text === 'Акции' ? `% ${text}` : text}
+                {text === 'Сертификаты и дипломы' ? ` ${text}` : text}
               </Typography>
             ))}
           </Stack>

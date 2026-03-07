@@ -1,0 +1,29 @@
+.category-card {
+  display: block;
+  background: white;
+  border-radius: 12px;
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+  transition: 0.2s;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.category-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+}
+
+.category-card-info {
+  margin-top: 10px;
+}
+
+.category-card-info span {
+  color: #666;
+  font-size: 14px;
+}
