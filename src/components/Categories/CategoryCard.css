@@ -1,29 +1,56 @@
 .category-card {
-  display: block;
-  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+  max-width: 300px;
+  background-color: #f9f9f9;
   border-radius: 12px;
-  padding: 5px;
+  padding: 15px; /* Увеличил с 5px, чтобы контент не прилипал к краям */
   text-decoration: none;
-  color: black;
-  transition: 0.2s;
+  color: #333;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .category-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background-color: #fff; /* Карточка "подсвечивается" при наведении */
 }
 
 .category-card img {
   width: 100%;
-  height: 170px;
-  object-fit: contain;
+  height: 180px; /* Фиксированная высота для ровности сетки */
+  object-fit: contain; /* Мебель будет видна целиком без обрезок */
+  margin-bottom: 15px;
 }
 
 .category-card-info {
-  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Расстояние между названием и ценой */
 }
 
-.category-card-info span {
-  color: #666;
-  font-size: 14px;
+/* Название товара (для h3) */
+.category-card-info h3 {
+  color: #444;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0; /* Убрал дефолтные маргины h3 для лучшего контроля */
+}
+
+/* Блок с ценой */
+.category-price {
+  background-color: #e9d184;
+  color: #333;
+  padding: 5px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  align-self: center; /* Центрирует желтый ценник внутри flex-контейнера */
+  font-weight: 700;
+  font-size: 15px;
 }

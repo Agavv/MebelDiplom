@@ -1,9 +1,7 @@
 import CategoryCard from "./CategoryCard";
 import "./CategoriesGrid.css";
 
-
 export default function CategoriesGrid() {
-
   const categories = [
     {
       id: 1,
@@ -33,7 +31,6 @@ export default function CategoriesGrid() {
 
   return (
     <div className="categories-grid">
-
       {categories.map(cat => (
         <CategoryCard
           key={cat.id}
@@ -43,7 +40,6 @@ export default function CategoriesGrid() {
           image={cat.image}
         />
       ))}
-
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import React from 'react';
 import { 
   AppBar, Toolbar, Typography, Container, Box, Stack, 
-  InputBase, Button, IconButton, Badge, Divider 
+  InputBase, Button, IconButton, Badge 
 } from '@mui/material';
 import { 
   Search, ShoppingCartOutlined, PersonOutline, 
-  FavoriteBorder, BarChart, HomeOutlined, KeyboardArrowDown 
+  FavoriteBorder, BarChart, HomeOutlined 
 } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -15,7 +16,8 @@ const Header = () => {
         
         <Toolbar sx={{ justifyContent: 'space-between', py: 2, px: '0 !important' }}>
           
-          <Box sx={{ minWidth: '180px' }}>
+          {/* Логотип */}
+          <Box component={Link} to="/" sx={{ minWidth: '180px', textDecoration: 'none', color: 'inherit' }}>
             <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-1px', mb: -0.5 }}>
               Best<Box component="span" sx={{ color: '#333' }}>Mebel</Box>
             </Typography>
@@ -46,8 +48,8 @@ const Header = () => {
           {/* Информация и Контакты */}
           <Stack direction="row" spacing={3} alignItems="center" sx={{ mr: 3 }}>
             <Box>
-              <Typography sx={{ fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-                Москва <KeyboardArrowDown fontSize="small" />
+              <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
+                Москва 
               </Typography>
               <Typography sx={{ fontSize: '11px', color: '#777', borderBottom: '1px dotted #777' }}>
                 Ежедневно с 09:00 до 23:00
@@ -56,7 +58,7 @@ const Header = () => {
             
             <Box>
               <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-                +7 (499) 110-71-09
+                +7 (999) 555-22-11
               </Typography>
               <Typography sx={{ fontSize: '11px', color: '#777' }}>
                 sale@bestmebelshop.ru
@@ -64,8 +66,10 @@ const Header = () => {
             </Box>
           </Stack>
 
-          {/* 4. Кнопка "Заказать звонок" */}
+          {/* Кнопка "Заказать звонок" */}
           <Button 
+            component={Link} // Добавляем компонент ссылки
+            to="/contacts"   // Указываем путь к контактам
             variant="contained" 
             sx={{ 
               bgcolor: '#F5D066', 
@@ -82,12 +86,21 @@ const Header = () => {
             Заказать звонок
           </Button>
 
-          {/* Иконки действий */}
+          {/* Иконки действий с роутингом */}
           <Stack direction="row" spacing={0.5}>
-            <IconButton><FavoriteBorder sx={{ color: '#333' }} /></IconButton>
-            <IconButton><BarChart sx={{ color: '#333' }} /></IconButton>
-            <IconButton><PersonOutline sx={{ color: '#333' }} /></IconButton>
-            <IconButton>
+            <IconButton component={Link} to="/favorites">
+              <FavoriteBorder sx={{ color: '#333' }} />
+            </IconButton>
+            
+            <IconButton component={Link} to="/comparison">
+              <BarChart sx={{ color: '#333' }} />
+            </IconButton>
+            
+            <IconButton component={Link} to="/profile">
+              <PersonOutline sx={{ color: '#333' }} />
+            </IconButton>
+            
+            <IconButton component={Link} to="/cart">
               <Badge badgeContent={0} color="success" showZero>
                 <ShoppingCartOutlined sx={{ color: '#333' }} />
               </Badge>
@@ -100,26 +113,44 @@ const Header = () => {
       <Box sx={{ bgcolor: '#f9f9f9', borderTop: '1px solid #eee', borderBottom: '1px solid #eee' }}>
         <Container maxWidth="xl">
           <Stack direction="row" spacing={4} sx={{ py: 1.5, alignItems: 'center' }}>
-            <IconButton size="small" sx={{ color: '#ff6b00' }}>
+            
+            {/* Домик теперь ведет в каталог */}
+            <IconButton 
+              component={Link} 
+              to="/catalog" 
+              size="small" 
+              sx={{ color: '#ff6b00' }}
+            >
               <HomeOutlined />
             </IconButton>
+
             {[
-              'Каталог', 'О фабрике', 'Новости магазина', 'Оплата', 'Доставка', 
-              'Сборка', 'Гарантия', 'Контакты', 'Вопрос-ответ', 'Статьи', 'Сертификаты и дипломы'
-            ].map((text) => (
-              <Typography 
-                key={text} 
-                variant="body2" 
-                sx={{ 
-                  cursor: 'pointer', 
-                  fontSize: '14px',
-                  fontWeight: text === 'Сертификаты и дипломы' ? 'bold' : '500',
-                  color: text === 'Сертификаты и дипломы' ? '#000000' : '#333',
-                  '&:hover': { color: '#ff6b00' }
-                }}
+              { text: 'Каталог', path: '/catalog' },
+              { text: 'Новости магазина', path: '/news' },
+              { text: 'Оплата', path: '/payment' },
+              { text: 'Доставка', path: '/delivery' },
+              { text: 'Гарантия', path: '/warranty' },
+              { text: 'Контакты', path: '/contacts' },
+              { text: 'Вопрос-ответ', path: '/faq' },
+              { text: 'Сертификаты и благодарности', path: '/certificates' },
+            ].map(({ text, path }) => (
+              <Link
+                key={text}
+                to={path}
+                style={{ textDecoration: 'none' }}
               >
-                {text === 'Сертификаты и дипломы' ? ` ${text}` : text}
-              </Typography>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    fontSize: '14px',
+                    fontWeight: text === 'Сертификаты и благодарности' ? 'bold' : '500',
+                    color: text === 'Сертификаты и благодарности' ? '#000' : '#333',
+                    '&:hover': { color: '#ff6b00' }
+                  }}
+                >
+                  {text}
+                </Typography>
+              </Link>
             ))}
           </Stack>
         </Container>

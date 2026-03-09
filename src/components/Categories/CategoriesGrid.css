@@ -1,6 +1,7 @@
 .categories-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: grid; /* Исправлено: было 'center', но для сетки нужно grid */
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); /* Адаптивная сетка, минимум 250px под карточки */
   gap: 20px;
   padding: 20px;
+  justify-content: center; /* Центрирует карточки, если их меньше в ряду */
 }
