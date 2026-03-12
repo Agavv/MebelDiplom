@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { 
   AppBar, Toolbar, Typography, Container, Box, Stack, 
   InputBase, Button, IconButton, Badge 
@@ -9,7 +9,11 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
+import { ShopContext } from '../../contexts/ShopContext';   // ← ДОБАВИЛ
+
 const Header = () => {
+  const { cart, favorites } = useContext(ShopContext);   // ← ДОБАВИЛ ЭТУ СТРОКУ
+
   return (
     <AppBar position="static" sx={{ bgcolor: '#fff', color: '#000', boxShadow: 'none' }}>
       <Container maxWidth="xl">
@@ -68,8 +72,8 @@ const Header = () => {
 
           {/* Кнопка "Заказать звонок" */}
           <Button 
-            component={Link} // Добавляем компонент ссылки
-            to="/contacts"   // Указываем путь к контактам
+            component={Link}
+            to="/contacts"
             variant="contained" 
             sx={{ 
               bgcolor: '#F5D066', 
@@ -89,7 +93,9 @@ const Header = () => {
           {/* Иконки действий с роутингом */}
           <Stack direction="row" spacing={0.5}>
             <IconButton component={Link} to="/favorites">
-              <FavoriteBorder sx={{ color: '#333' }} />
+              <Badge badgeContent={favorites.length} color="error" showZero>
+                <FavoriteBorder sx={{ color: '#333' }} />
+              </Badge>
             </IconButton>
             
             <IconButton component={Link} to="/comparison">
@@ -101,7 +107,11 @@ const Header = () => {
             </IconButton>
             
             <IconButton component={Link} to="/cart">
-              <Badge badgeContent={0} color="success" showZero>
+              <Badge 
+                badgeContent={cart.reduce((sum, item) => sum + item.quantity, 0)} 
+                color="success" 
+                showZero
+              >
                 <ShoppingCartOutlined sx={{ color: '#333' }} />
               </Badge>
             </IconButton>

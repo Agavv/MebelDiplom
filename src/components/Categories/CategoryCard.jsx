@@ -3,7 +3,7 @@ import "./CategoryCard.css";
 
 export default function CategoryCard({ title, price, image, categoryId }) {  
   return (
-    <Link to="#" className="category-card"> 
+    <Link to={`/products?category=${categoryId}`} className="category-card"> 
       <img src={image} alt={title} />  
       <div className="category-card-info">
         <h3>{title}</h3>

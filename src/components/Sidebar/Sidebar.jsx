@@ -1,44 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
+import { mockCategories } from "../../data/mockCategories";   // ← добавил
 import './Sidebar.css';
-
-const categories = [
-  { 
-    id: 1, 
-    name: 'Комоды и тумбы', 
-    icon: '🗄️', 
-    subCategories: [
-      { id: 101, name: 'Прикроватные тумбы' },
-      { id: 102, name: 'Комоды для спальни' }
-    ] 
-  },
-  { 
-    id: 2, 
-    name: 'Мебель для детской', 
-    icon: '🧸', 
-    subCategories: [
-      { id: 201, name: 'Детские кровати' },
-      { id: 202, name: 'Столы для учебы' }
-    ] 
-  },
-  { 
-    id: 3, 
-    name: 'Мебель для кухни', 
-    icon: '🍳', 
-    subCategories: [
-      { id: 301, name: 'Кухонные гарнитуры' },
-      { id: 302, name: 'Столы' }
-    ] 
-  },
-  { 
-    id: 4, 
-    name: 'Мебель для офиса', 
-    icon: '💼', 
-    subCategories: [
-      { id: 401, name: 'Офисные столы' },
-      { id: 402, name: 'Кресла' }
-    ] 
-  },
-];
 
 const Sidebar = () => {
   const [openIds, setOpenIds] = useState([]);
@@ -55,30 +18,26 @@ const Sidebar = () => {
     <aside className="sidebar">
       <h3 className="sidebar-title">Каталог мебели</h3>
       <ul className="sidebar-menu">
-        {categories.map((category) => {
+        {mockCategories.map((category) => {   // ← теперь из mock
           const isOpen = openIds.includes(category.id);
           const hasSubs = category.subCategories && category.subCategories.length > 0;
 
           return (
             <li key={category.id} className="menu-container">
-              
-              {/* --- Твой новый кусок кода с оберткой --- */}
               <div 
                 className={`menu-item ${isOpen ? 'active' : ''}`} 
                 onClick={() => toggleCategory(category.id)}
               >
-                <div className="menu-item-wrapper">  {/* Новая обертка для flex */}
+                <div className="menu-item-wrapper">
                   <div className="menu-item-content">
                     <span className="menu-icon">{category.icon}</span>
-                    <span 
+                    <Link 
+                      to={`/products?category=${category.id}`}
                       className="menu-label"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log(`Clicked main category: ${category.name}`);
-                      }}
+                      onClick={(e) => e.stopPropagation()} 
                     >
                       {category.name}
-                    </span>
+                    </Link>
                   </div>
                   
                   {hasSubs && (
@@ -88,21 +47,17 @@ const Sidebar = () => {
                   )}
                 </div>
               </div>
-              {/* --- Конец нового куска --- */}
 
-              {/* Список подкатегорий */}
               {isOpen && hasSubs && (
                 <ul className="subcategory-list">
                   {category.subCategories.map((sub) => (
-                    <li 
-                      key={sub.id} 
-                      className="subcategory-item" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log(`Clicked subcategory: ${sub.name}`);
-                      }}
-                    >
-                      {sub.name}
+                    <li key={sub.id} className="subcategory-item">
+                      <Link 
+                        to={`/products?category=${sub.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {sub.name}
+                      </Link>
                     </li>
                   ))}
                 </ul>

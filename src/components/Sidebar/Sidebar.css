@@ -123,3 +123,26 @@
 .menu-item.active .menu-label {
   color: #f39c12;
 }
+
+/* ==================== НОВОЕ ДЛЯ ССЫЛОК ==================== */
+.menu-label {
+  text-decoration: none !important;
+  display: block;
+  width: 100%;
+  color: inherit;
+}
+
+.menu-label:hover {
+  color: #f39c12;
+}
+
+.subcategory-item a {
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  color: inherit;
+}
+
+.subcategory-item a:hover {
+  color: #f39c12;
+}
