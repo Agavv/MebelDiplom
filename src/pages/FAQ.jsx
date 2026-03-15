@@ -138,17 +138,8 @@ export default function FAQ() {
           Не нашли ответ на свой вопрос?
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Наши менеджеры с радостью проконсультируют вас по телефону
+          Наши техподдержка с радостью поможет вам, пишите на нашу почту sale@bestmebelshop.ru
         </Typography>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-          <Button 
-            variant="contained" 
-            startIcon={<LocalPhone />}
-            sx={{ bgcolor: '#ff6b00', '&:hover': { bgcolor: '#e65100' }, borderRadius: '8px', textTransform: 'none', px: 4 }}
-          >
-            Заказать звонок
-          </Button>
-        </Stack>
       </Paper>
     </Container>
   );

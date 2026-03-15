@@ -106,15 +106,8 @@ export default function Delivery() {
       {/* Желтый информационный блок */}
       <Paper elevation={0} sx={{ p: 3, bgcolor: '#fff9c4', mb: 2, borderRadius: 1 }}>
         <Typography variant="body2" sx={{ color: '#555', lineHeight: 1.6 }}>
-          Наша компания осуществляет доставку в пределах Москвы и МО. В пределах МКАД транспортировка до подъезда заказчика является <strong>бесплатной</strong>. <br />
+          Наша компания осуществляет доставку в пределах Москвы и МО. В пределах МКАД транспортировка до подъезда заказчика является <strong>платной</strong>. <br />
           Доставка осуществляется с <strong>06:00 до 00:00</strong>. <br />
-          Оптовым клиентам предоставляется возможность заказать доставку по России посредством логистической компании.
-        </Typography>
-      </Paper>
-
-      <Paper elevation={0} sx={{ p: 2, bgcolor: '#fff9c4', mb: 4, borderRadius: 1 }}>
-        <Typography variant="body2">
-          Товары из раздела <strong>Распродажа</strong> доставляются по 100% предоплате онлайн.
         </Typography>
       </Paper>
 
@@ -131,7 +124,7 @@ export default function Delivery() {
           <Speed sx={{ color: '#8bc34a', fontSize: 40 }} />
           <Box>
             <Typography variant="caption" color="text.secondary" display="block">За МКАД</Typography>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}> БЕСПЛАТНО </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}> 500 рублей </Typography>
           </Box>
         </Stack>
       </Stack>

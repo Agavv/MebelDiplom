@@ -1,223 +1,202 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
-  Container,
-  Typography,
-  Paper,
-  Stack,
-  Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  Link,
-  Breadcrumbs
+  Container, Box, Typography, Grid, Paper, Button,
+  Accordion, AccordionSummary, AccordionDetails,
+  List, ListItem, ListItemIcon, ListItemText, Divider, Chip,
 } from '@mui/material';
 import {
-  Assignment,
-  VerifiedUser,
-  CalendarMonth,
-  AccountBalanceWallet,
-  PhoneInTalk,
-  Email,
-  Description,
-  NavigateNext
+  ExpandMore, CheckCircle, Cancel, Phone, Shield,
+  Build, LocalShipping, Star, Warning,
 } from '@mui/icons-material';
+import CallbackModal from '../components/CallbackModal/CallbackModal';
 
-// Импорт документов (пути указаны относительно файла Warranty.js)
-// Если файл лежит в src/pages/, путь будет '../assets/documents/...'
-import docPdf from '../assets/documents/doc.pdf';
-import usloviyaPdf from '../assets/documents/usloviya.pdf';
-import dogovorPdf from '../assets/documents/dogovor.pdf';
+const WARRANTY_TERMS = [
+  { title: 'Корпусная мебель', period: '5 лет', icon: '🗄️' },
+  { title: 'Мягкая мебель',    period: '3 года', icon: '🛋️' },
+  { title: 'Кухонные гарнитуры', period: '5 лет', icon: '🍳' },
+  { title: 'Детская мебель',   period: '5 лет', icon: '🧸' },
+  { title: 'Мебель для офиса', period: '3 года', icon: '💼' },
+  { title: 'Фурнитура',        period: '2 года', icon: '🔩' },
+];
+
+const COVERED = [
+  'Производственные дефекты изготовления',
+  'Дефекты материалов (расслоение, трещины)',
+  'Поломка механизмов трансформации при правильной эксплуатации',
+  'Неисправность фурнитуры (петли, направляющие, ручки)',
+  'Нарушение лакокрасочного покрытия без механических повреждений',
+  'Несоответствие заявленным размерам',
+];
+
+const NOT_COVERED = [
+  'Механические повреждения (царапины, сколы, вмятины)',
+  'Повреждения от воды, влаги, огня или химикатов',
+  'Естественный износ обивки и мягких элементов',
+  'Повреждения при неправильной сборке (не нашими мастерами)',
+  'Изменение цвета под воздействием солнечного света',
+  'Повреждения при транспортировке покупателем',
+];
+
+const FAQ = [
+  {
+    q: 'Как оформить гарантийный случай?',
+    a: 'Позвоните нам по номеру +7 (999) 555-22-11 или заполните форму обратного звонка. Наш специалист выедет на осмотр в удобное для вас время. При подтверждении гарантийного случая ремонт или замена производятся бесплатно.',
+  },
+  {
+    q: 'Нужен ли чек для гарантийного обслуживания?',
+    a: 'Мы можем подтвердить покупку по базе данных. Однако для ускорения процесса рекомендуем сохранять кассовый чек или документ о покупке.',
+  },
+  {
+    q: 'Сколько времени занимает ремонт по гарантии?',
+    a: 'Стандартный срок — до 14 рабочих дней с момента обращения. В сложных случаях (ожидание комплектующих) срок может быть продлён до 30 дней с уведомлением.',
+  },
+  {
+    q: 'Что делать если мебель пришла повреждённой?',
+    a: 'Необходимо зафиксировать повреждения фото/видео при курьере и отказаться от подписания акта приёмки. Свяжитесь с нами немедленно — мы заменим товар.',
+  },
+  {
+    q: 'Распространяется ли гарантия на мебель из распродажи?',
+    a: 'Да, гарантийные условия одинаковы для всех товаров независимо от цены и акций.',
+  },
+];
 
 export default function Warranty() {
+  const [callbackOpen, setCallbackOpen] = useState(false);
+
   return (
-    <Container maxWidth="lg" sx={{ py: 2 }}>
-      {/* Хлебные крошки */}
-      <Breadcrumbs 
-        separator={<NavigateNext fontSize="small" />} 
-        aria-label="breadcrumb" 
-        sx={{ mb: 2, fontSize: '0.8rem' }}
-      >
-        <Link underline="hover" color="inherit" href="/">Главная</Link>
-        <Typography color="text.primary" sx={{ fontSize: '0.8rem' }}>Гарантия</Typography>
-      </Breadcrumbs>
+    <>
+      <Container maxWidth="lg" sx={{ py: 5 }}>
 
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: '#333' }}>
-        Гарантия и возврат мебели
-      </Typography>
+        {/* Заголовок */}
+        <Box sx={{ mb: 5 }}>
+          <Typography variant="h4" fontWeight={700} mb={1}>Гарантия и сервис</Typography>
+          <Typography color="text.secondary">
+            Мы уверены в качестве нашей мебели и предоставляем официальную гарантию на все изделия
+          </Typography>
+        </Box>
 
-      {/* 1. Зеленый баннер */}
-      <Paper
-        elevation={0}
-        sx={{
-          background: 'linear-gradient(90deg, #579212 0%, #a4cb39 50%, #f2e365 100%)',
-          borderRadius: 2,
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          mb: 6,
-          minHeight: '220px',
-          position: 'relative'
-        }}
-      >
-        <Stack direction="row" alignItems="center" sx={{ px: { xs: 3, md: 6 }, width: '100%', color: '#fff' }}>
-          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ position: 'relative', mr: 3 }}>
-               <Assignment sx={{ fontSize: 80, opacity: 0.9 }} />
-               <VerifiedUser sx={{ position: 'absolute', bottom: 0, right: -10, color: '#ffb300', fontSize: 40 }} />
+        {/* Баннер */}
+        <Paper sx={{
+          p: 4, mb: 5, borderRadius: 3,
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+          color: '#fff',
+          display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center',
+        }}>
+          <Box sx={{ flex: 1, minWidth: 260 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Shield sx={{ fontSize: 48, color: '#F5D066' }} />
+              <Typography variant="h5" fontWeight={700}>Гарантия до 5 лет</Typography>
             </Box>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', maxWidth: '450px', lineHeight: 1.2 }}>
-              Гарантия это наш главный козырь!
+            <Typography sx={{ color: '#ccc', lineHeight: 1.7 }}>
+              На все изделия BestMebel распространяется официальная гарантия.
+              При обнаружении производственного дефекта мы бесплатно отремонтируем
+              или заменим товар.
             </Typography>
           </Box>
-          <Box 
-            component="img" 
-            src="src\assets\images\assembly-worker.png" 
-            sx={{ 
-              height: '220px', 
-              display: { xs: 'none', md: 'block' },
-              objectFit: 'cover'
-            }} 
-          />
-        </Stack>
-      </Paper>
-
-      {/* 2. Три преимущества */}
-      <Grid container spacing={5} sx={{ mb: 8 }}>
-        {[
-          { icon: <AccountBalanceWallet />, num: '01', title: 'Не понравилась мебель - вернем деньги!' },
-          { icon: <VerifiedUser />, num: '02', title: 'Гарантия на все товары - 18 месяцев!' },
-          { icon: <CalendarMonth />, num: '03', title: 'Срок службы мебели - составляет 10 лет!' }
-        ].map((item, idx) => (
-          <Grid item xs={12} md={4} key={idx} sx={{ textAlign: 'center' }}>
-            <Box sx={{ position: 'relative', display: 'inline-block', mb: 3 }}>
-              <Typography variant="h1" sx={{ 
-                position: 'absolute', 
-                top: '50%', 
-                left: '50%', 
-                transform: 'translate(-50%, -50%)',
-                opacity: 0.05,
-                fontSize: '6rem',
-                fontWeight: 'bold'
-              }}>{item.num}</Typography>
-              <Box sx={{ color: '#4caf50', '& svg': { fontSize: 60 } }}>{item.icon}</Box>
-            </Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: '500', px: 4 }}>{item.title}</Typography>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* 3. Правила и Брак */}
-      <Grid container spacing={4} sx={{ mb: 6 }}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={0} sx={{ p: 4, bgcolor: '#f8f9fa', height: '100%' }}>
-            <Typography variant="h6" sx={{ color: '#333', mb: 2, fontWeight: 'bold' }}>Правила возврата:</Typography>
-            <Typography variant="body2" paragraph color="text.secondary">
-              Если вам не подошла мебель по тем или иным причинам, Вы вправе отказаться от товара в течение 7 дней после его получения.
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Button
+              variant="contained" size="large"
+              startIcon={<Phone />}
+              onClick={() => setCallbackOpen(true)}
+              sx={{ bgcolor: '#F5D066', color: '#333', fontWeight: 700, '&:hover': { bgcolor: '#e5c056' } }}
+            >
+              Гарантийный случай — позвонить
+            </Button>
+            <Typography variant="caption" sx={{ color: '#888', textAlign: 'center' }}>
+              Звонок бесплатный · Ежедневно 09:00–23:00
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>Возврату не подлежит:</Typography>
-            <List dense sx={{ mb: 2 }}>
-              {['Расходные комплектующие (лампы, фильтры и пр.)', 'Мебель, выполненная по индивидуальному проекту', 'Собранная или бывшая в употреблении мебель'].map((text, i) => (
-                <ListItem key={i} sx={{ p: 0 }}>
-                  <ListItemIcon sx={{ minWidth: 20 }}>•</ListItemIcon>
-                  <Typography variant="body2" color="text.secondary">{text}</Typography>
+          </Box>
+        </Paper>
+
+        {/* Сроки гарантии */}
+        <Typography variant="h5" fontWeight={700} mb={3}>Сроки гарантии по категориям</Typography>
+        <Grid container spacing={2} sx={{ mb: 5 }}>
+          {WARRANTY_TERMS.map(({ title, period, icon }) => (
+            <Grid item xs={12} sm={6} md={4} key={title}>
+              <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography sx={{ fontSize: 32 }}>{icon}</Typography>
+                <Box>
+                  <Typography fontWeight={600}>{title}</Typography>
+                  <Chip label={period} color="primary" size="small" variant="outlined" sx={{ mt: 0.5 }} />
+                </Box>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Divider sx={{ mb: 5 }} />
+
+        {/* Покрывается / не покрывается */}
+        <Grid container spacing={4} sx={{ mb: 5 }}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6" fontWeight={700} mb={2} color="success.main">
+              ✓ Гарантия покрывает
+            </Typography>
+            <List dense>
+              {COVERED.map(item => (
+                <ListItem key={item} disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <CheckCircle sx={{ fontSize: 18, color: 'success.main' }} />
+                  </ListItemIcon>
+                  <ListItemText primary={<Typography variant="body2">{item}</Typography>} />
                 </ListItem>
               ))}
             </List>
-            <Typography variant="body2" color="text.secondary">
-              Для возврата свяжитесь с отделом: <strong>+7 (499) 110-71-19</strong> или <strong>garant@bestmebelshop.ru</strong>
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={0} sx={{ p: 4, bgcolor: '#f8f9fa', height: '100%' }}>
-            <Typography variant="h6" sx={{ color: '#ff9800', mb: 2, fontWeight: 'bold' }}>При обнаружении брака:</Typography>
-            <Typography variant="body2" paragraph color="text.secondary">
-              Покупатель имеет полное право на осмотр покупки. При обнаружении брака клиент может позвонить по телефону в гарантийный отдел с 9:00 до 21:00.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Другой способ — заполнение специальной формы «Заявки в гарантийный отдел» ниже. Опишите проблему и прикрепите фотографии.
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* 4. Контактная строка со ссылкой на Оферту */}
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} sx={{ mb: 4, px: 2 }}>
-        <Link href={dogovorPdf} target="_blank" rel="noopener noreferrer" underline="none" color="inherit">
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ cursor: 'pointer' }}>
-            <Description sx={{ color: '#4caf50' }} />
-            <Typography variant="body2" sx={{ borderBottom: '1px dashed' }}>
-              Договор публичной оферты
-            </Typography>
-          </Stack>
-        </Link>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <PhoneInTalk sx={{ color: '#4caf50' }} />
-          <Box>
-            <Typography variant="caption" display="block" color="text.secondary">Время работы с 9-00 до 18-00</Typography>
-            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>+7 (499) 110-71-19</Typography>
-          </Box>
-        </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Email sx={{ color: '#4caf50' }} />
-          <Box>
-            <Typography variant="caption" display="block" color="text.secondary">Электронная почта:</Typography>
-            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>garant@bestmebelshop.ru</Typography>
-          </Box>
-        </Stack>
-      </Stack>
-
-      {/* 5. Форма обратного звонка */}
-      <Paper variant="outlined" sx={{ p: 4, mb: 4, borderRadius: 2 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              Отдел гарантии - обратный звонок
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              При возникновении вопросов по порядку возврата или гарантии, оставьте заявку и мы свяжемся с вами в ближайшее время.
-            </Typography>
           </Grid>
-          <Grid item xs={12} md={8}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth size="small" label="Ваше имя" variant="outlined" />
-                <TextField fullWidth size="small" label="+7 (___) ___-__-__" variant="outlined" sx={{ mt: 2 }} />
-                <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                   <TextField fullWidth size="small" type="date" defaultValue="2026-03-09" />
-                   <FormControl fullWidth size="small">
-                      <Select defaultValue={12}>
-                        <MenuItem value={12}>12 ч.</MenuItem>
-                        <MenuItem value={13}>13 ч.</MenuItem>
-                      </Select>
-                   </FormControl>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField fullWidth multiline rows={4} label="Сообщение" variant="outlined" />
-              </Grid>
-              <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Button variant="contained" sx={{ bgcolor: '#ffe082', color: '#000', '&:hover': { bgcolor: '#ffd54f' }, px: 4 }}>
-                  Отправить
-                </Button>
-                {/* Текст со ссылками на PDF */}
-                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                  Нажимая на кнопку «Отправить», вы соглашаетесь с условиями{' '}
-                  <Link href={usloviyaPdf} target="_blank" rel="noopener noreferrer">Обработки персональных данных</Link>{' '}
-                  и{' '}
-                  <Link href={docPdf} target="_blank" rel="noopener noreferrer">политикой конфиденциальности</Link>
-                </Typography>
-              </Grid>
-            </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6" fontWeight={700} mb={2} color="error.main">
+              ✗ Гарантия не покрывает
+            </Typography>
+            <List dense>
+              {NOT_COVERED.map(item => (
+                <ListItem key={item} disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <Cancel sx={{ fontSize: 18, color: 'error.main' }} />
+                  </ListItemIcon>
+                  <ListItemText primary={<Typography variant="body2">{item}</Typography>} />
+                </ListItem>
+              ))}
+            </List>
           </Grid>
         </Grid>
-      </Paper>
-    </Container>
+
+        <Divider sx={{ mb: 5 }} />
+
+        {/* FAQ */}
+        <Typography variant="h5" fontWeight={700} mb={3}>Часто задаваемые вопросы</Typography>
+        {FAQ.map((item, i) => (
+          <Accordion key={i} sx={{ mb: 1, borderRadius: '8px !important', '&:before': { display: 'none' }, boxShadow: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography fontWeight={600}>{item.q}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>{item.a}</Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+
+        {/* Нижний CTA */}
+        <Paper sx={{ p: 4, mt: 5, borderRadius: 3, bgcolor: '#f9f9f9', textAlign: 'center' }}>
+          <Warning sx={{ fontSize: 48, color: '#F5D066', mb: 1 }} />
+          <Typography variant="h6" fontWeight={700} mb={1}>
+            Возник гарантийный случай?
+          </Typography>
+          <Typography color="text.secondary" mb={3}>
+            Не занимайтесь ремонтом самостоятельно — это может привести к потере гарантии.
+            Позвоните нам, и мы решим проблему.
+          </Typography>
+          <Button
+            variant="contained" size="large"
+            startIcon={<Phone />}
+            onClick={() => setCallbackOpen(true)}
+            sx={{ bgcolor: '#F5D066', color: '#333', fontWeight: 700, '&:hover': { bgcolor: '#e5c056' } }}
+          >
+            Заказать обратный звонок
+          </Button>
+        </Paper>
+      </Container>
+
+      <CallbackModal open={callbackOpen} onClose={() => setCallbackOpen(false)} />
+    </>
   );
 }

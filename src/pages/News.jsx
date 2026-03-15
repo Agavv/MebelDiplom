@@ -1,171 +1,178 @@
-import React from 'react';
-import { 
-  Container, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Box, 
-  Breadcrumbs, 
-  Link, 
-  Button,
-  Chip,
-  Stack
+import React, { useState } from 'react';
+import {
+  Container, Grid, Card, CardMedia, CardContent, CardActions,
+  Typography, Button, Chip, Box, Divider, TextField,
+  InputAdornment, Tabs, Tab,
 } from '@mui/material';
-import { NavigateNext, AccessTime, ArrowForward } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Search, CalendarToday, ArrowForward } from '@mui/icons-material';
 
-const newsData = [
+const NEWS = [
   {
-    id: 1,
-    title: 'Весеннее обновление коллекции 2026',
-    date: '15 Марта 2026',
-    category: 'Новинки',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=500',
-    excerpt: 'Мы расширили ассортимент мягкой мебели. Теперь в каталоге доступно более 50 новых моделей диванов в трендовых оттенках этого сезона.'
+    id: 1, category: 'Новинки',
+    title: 'Новая коллекция мебели в стиле Скандинавия',
+    date: '2026-05-20',
+    preview: 'Представляем обновлённую линейку мебели в скандинавском стиле. Светлые тона, натуральные материалы и строгие линии — идеально для современного интерьера.',
+    image: 'https://picsum.photos/id/1048/600/400',
   },
   {
-    id: 2,
-    title: 'Открытие нового шоурума в ТЦ "МебельГрад"',
-    date: '10 Марта 2026',
-    category: 'События',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=500',
-    excerpt: 'Ждем вас на торжественное открытие! Первым 100 покупателям — эксклюзивные скидки и подарки для дома.'
+    id: 2, category: 'Советы',
+    title: 'Как правильно выбрать диван для гостиной',
+    date: '2026-05-10',
+    preview: 'При выборе дивана важно учитывать не только дизайн, но и практичность. Рассказываем на что обратить внимание: материал обивки, наполнитель, механизм трансформации.',
+    image: 'https://picsum.photos/id/1049/600/400',
   },
   {
-    id: 3,
-    title: 'Как выбрать идеальный шкаф-купе: советы дизайнера',
-    date: '05 Марта 2026',
-    category: 'Статьи',
-    image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80&w=500',
-    excerpt: 'Разбираемся, на чем можно сэкономить при заказе встроенной мебели, а на каких деталях экономить категорически нельзя.'
+    id: 3, category: 'Все',
+    title: 'Бесплатная доставка при заказе от 30 000 ₽',
+    date: '2026-04-25',
+    preview: 'До конца месяца действует специальное предложение — при заказе мебели на сумму от 30 000 рублей доставка по Москве и области бесплатно.',
+    image: 'https://picsum.photos/id/1050/600/400',
+  },
+  {
+    id: 4, category: 'Новинки',
+    title: 'Поступление кухонных гарнитуров — серия «Модерн»',
+    date: '2026-04-15',
+    preview: 'Новинка сезона — кухонная серия «Модерн» в 12 цветовых исполнениях. МДФ фасады с матовым покрытием, интегрированные ручки и мягкое закрывание дверей.',
+    image: 'https://picsum.photos/id/1060/600/400',
+  },
+  {
+    id: 5, category: 'Советы',
+    title: '5 идей для небольшой спальни',
+    date: '2026-04-02',
+    preview: 'Маленькая спальня — не проблема, если грамотно организовать пространство. Делимся проверенными решениями: откидные кровати, встроенные шкафы и многофункциональная мебель.',
+    image: 'https://picsum.photos/id/1062/600/400',
   },
 ];
 
-export default function News() {
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      
-      {/* Навигация */}
-      <Breadcrumbs 
-        separator={<NavigateNext fontSize="small" />} 
-        sx={{ mb: 3, fontSize: '0.85rem' }}
-      >
-        <Link 
-          component={RouterLink} 
-          to="/" 
-          underline="hover" 
-          color="inherit"
-        >
-          Главная
-        </Link>
-        <Typography color="text.primary" sx={{ fontSize: '0.85rem' }}>
-          Новости магазина
-        </Typography>
-      </Breadcrumbs>
+const CATEGORIES = ['Все', 'Новинки', 'Советы'];
 
-      {/* Заголовок */}
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ fontWeight: 800, color: '#222', mb: 1 }}>
-          Новости и события
-        </Typography>
-        <Box sx={{ width: '80px', height: '4px', bgcolor: '#ff6b00', borderRadius: 2 }} />
+const CATEGORY_COLORS = {
+  'Новинки': 'success',
+  'Советы':  'info',
+};
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+export default function News() {
+  const [search,      setSearch]      = useState('');
+  const [activeTab,   setActiveTab]   = useState(0);
+  const [expanded,    setExpanded]    = useState(null);
+
+  const category = CATEGORIES[activeTab];
+
+  const filtered = NEWS.filter(n => {
+    const matchCat    = category === 'Все' || n.category === category;
+    const matchSearch = !search.trim() || n.title.toLowerCase().includes(search.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  // Первая новость — большой баннер
+  const [featured, ...rest] = filtered;
+
+  return (
+    <Container maxWidth="lg" sx={{ py: 5 }}>
+      <Typography variant="h4" fontWeight={700} mb={1}>Новости и события</Typography>
+      <Typography color="text.secondary" mb={4}>
+        Новинки коллекций и полезные советы по обустройству интерьера
+      </Typography>
+
+      {/* Поиск + категории */}
+      <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap', alignItems: 'center' }}>
+        <TextField
+          size="small" placeholder="Поиск по новостям..."
+          value={search} onChange={(e) => setSearch(e.target.value)}
+          sx={{ minWidth: 260 }}
+          InputProps={{
+            startAdornment: <InputAdornment position="start"><Search sx={{ color: '#aaa' }} /></InputAdornment>
+          }}
+        />
+        <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)}>
+          {CATEGORIES.map((c, i) => <Tab key={c} label={c} />)}
+        </Tabs>
       </Box>
 
-      {/* Сетка новостей */}
-      <Grid container spacing={4}>
-        {newsData.map((item) => (
-          <Grid item xs={12} sm={6} md={3} key={item.id}>
-            <Card 
-              elevation={0} 
-              sx={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                border: '1px solid #eee',
-                borderRadius: 3,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 12px 20px rgba(0,0,0,0.08)',
-                  borderColor: 'transparent'
-                }
-              }}
-            >
-              <Box sx={{ position: 'relative' }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={item.image}
-                  alt={item.title}
-                />
-                <Chip 
-                  label={item.category} 
-                  size="small"
-                  sx={{ 
-                    position: 'absolute', 
-                    top: 12, 
-                    left: 12, 
-                    bgcolor: '#ff6b00', 
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    fontSize: '0.7rem'
-                  }} 
-                />
-              </Box>
-
-              <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5, color: '#999' }}>
-                  <AccessTime sx={{ fontSize: 16 }} />
-                  <Typography variant="caption">{item.date}</Typography>
-                </Stack>
-                
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, lineHeight: 1.3, fontSize: '1.1rem' }}>
-                  {item.title}
+      {filtered.length === 0 ? (
+        <Box sx={{ textAlign: 'center', py: 8 }}>
+          <Typography variant="h6" color="text.secondary">Новостей не найдено</Typography>
+        </Box>
+      ) : (
+        <>
+          {/* Главная новость */}
+          {featured && (
+            <Card sx={{ mb: 4, borderRadius: 3, overflow: 'hidden', display: { md: 'flex' } }}>
+              <CardMedia
+                component="img"
+                image={featured.image}
+                alt={featured.title}
+                sx={{ width: { md: '45%' }, height: { xs: 240, md: 'auto' }, objectFit: 'cover' }}
+              />
+              <CardContent sx={{ flex: 1, p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <Chip label={featured.category} color={CATEGORY_COLORS[featured.category] || 'default'} size="small" />
+                  {featured.badge && <Chip label={featured.badge} color="warning" size="small" />}
+                </Box>
+                <Typography variant="h5" fontWeight={700} mb={2} sx={{ lineHeight: 1.4 }}>
+                  {featured.title}
                 </Typography>
-                
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
-                  {item.excerpt}
+                <Typography color="text.secondary" mb={3} sx={{ lineHeight: 1.7 }}>
+                  {featured.preview}
                 </Typography>
-
-                <Button 
-                  component={RouterLink} 
-                  to={`/news/${item.id}`}
-                  endIcon={<ArrowForward fontSize="small" />}
-                  sx={{ 
-                    p: 0, 
-                    textTransform: 'none', 
-                    fontWeight: 600, 
-                    color: '#ff6b00',
-                    '&:hover': { bgcolor: 'transparent', color: '#e65100' }
-                  }}
-                >
-                  Читать полностью
-                </Button>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                    <CalendarToday sx={{ fontSize: 16 }} />
+                    <Typography variant="caption">{formatDate(featured.date)}</Typography>
+                  </Box>
+                  <Button endIcon={<ArrowForward />} size="small" variant="outlined">
+                    Читать далее
+                  </Button>
+                </Box>
               </CardContent>
             </Card>
-          </Grid>
-        ))}
-      </Grid>
+          )}
 
-      {/* Кнопка "Показать еще" (опционально) */}
-      <Box sx={{ mt: 8, textAlign: 'center' }}>
-        <Button 
-          variant="outlined" 
-          sx={{ 
-            borderColor: '#ddd', 
-            color: '#333', 
-            px: 6, 
-            py: 1.5, 
-            borderRadius: '50px',
-            textTransform: 'none',
-            '&:hover': { borderColor: '#ff6b00', color: '#ff6b00' }
-          }}
-        >
-          Загрузить старые новости
-        </Button>
-      </Box>
+          {/* Остальные */}
+          <Grid container spacing={3}>
+            {rest.map((item) => (
+              <Grid item xs={12} sm={6} md={4} key={item.id}>
+                <Card sx={{ height: '100%', borderRadius: 2, display: 'flex', flexDirection: 'column', transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 } }}>
+                  <CardMedia
+                    component="img" height="180"
+                    image={item.image} alt={item.title}
+                    sx={{ objectFit: 'cover' }}
+                  />
+                  <CardContent sx={{ flex: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                      <Chip label={item.category} color={CATEGORY_COLORS[item.category] || 'default'} size="small" />
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
+                        <CalendarToday sx={{ fontSize: 13 }} />
+                        <Typography variant="caption">{formatDate(item.date)}</Typography>
+                      </Box>
+                    </Box>
+                    <Typography fontWeight={700} mb={1} sx={{ lineHeight: 1.4 }}>{item.title}</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{
+                      lineHeight: 1.6,
+                      display: '-webkit-box', WebkitLineClamp: expanded === item.id ? 'unset' : 3,
+                      WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                    }}>
+                      {item.preview}
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ px: 2, pb: 2 }}>
+                    <Button
+                      size="small" endIcon={<ArrowForward />}
+                      onClick={() => setExpanded(expanded === item.id ? null : item.id)}
+                    >
+                      {expanded === item.id ? 'Свернуть' : 'Читать далее'}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
     </Container>
   );
 }

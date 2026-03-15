@@ -2,84 +2,80 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const ShopContext = createContext();
 
+const MAX_COMPARE = 4; // максимум товаров для сравнения
+
 export const ShopProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [cart,           setCart]           = useState([]);
+  const [favorites,      setFavorites]      = useState([]);
+  const [comparison,     setComparison]     = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Загрузка из localStorage один раз при старте
+  // Загрузка из localStorage
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    setCart(savedCart);
-    setFavorites(savedFavorites);
+    setCart(       JSON.parse(localStorage.getItem('cart')       || '[]'));
+    setFavorites(  JSON.parse(localStorage.getItem('favorites')  || '[]'));
+    setComparison( JSON.parse(localStorage.getItem('comparison') || '[]'));
   }, []);
 
-  // Сохранение в localStorage
-  useEffect(() => { localStorage.setItem('cart', JSON.stringify(cart)); }, [cart]);
-  useEffect(() => { localStorage.setItem('favorites', JSON.stringify(favorites)); }, [favorites]);
+  useEffect(() => { localStorage.setItem('cart',       JSON.stringify(cart));       }, [cart]);
+  useEffect(() => { localStorage.setItem('favorites',  JSON.stringify(favorites));  }, [favorites]);
+  useEffect(() => { localStorage.setItem('comparison', JSON.stringify(comparison)); }, [comparison]);
 
   // === КОРЗИНА ===
   const addToCart = (product) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
+      const existing = prev.find(i => i.id === product.id);
+      if (existing) return prev.map(i => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
       return [...prev, { ...product, quantity: 1 }];
     });
   };
-
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) {
-      removeFromCart(id);
-      return;
-    }
-    setCart(prev => prev.map(item =>
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
+  const updateQuantity = (id, qty) => {
+    if (qty < 1) { removeFromCart(id); return; }
+    setCart(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i));
   };
+  const removeFromCart = (id) => setCart(prev => prev.filter(i => i.id !== id));
+  const getQuantity    = (id) => cart.find(i => i.id === id)?.quantity || 0;
 
-  const removeFromCart = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
-  const getQuantity = (id) => cart.find(item => item.id === id)?.quantity || 0;
-
-  // === ИЗБРАННОЕ (полностью рабочее) ===
+  // === ИЗБРАННОЕ ===
   const toggleFavorite = (product) => {
     setFavorites(prev => {
-      const exists = prev.some(item => item.id === product.id);
-      if (exists) {
-        return prev.filter(item => item.id !== product.id);
-      } else {
-        return [...prev, product];
-      }
+      const exists = prev.some(i => i.id === product.id);
+      return exists ? prev.filter(i => i.id !== product.id) : [...prev, product];
     });
   };
+  const isFavorite = (id) => favorites.some(i => i.id === id);
 
-  const isFavorite = (id) => favorites.some(item => item.id === id);
+  // === СРАВНЕНИЕ ===
+  const addToComparison = (product) => {
+    setComparison(prev => {
+      if (prev.some(i => i.id === product.id)) return prev;
+      if (prev.length >= MAX_COMPARE) {
+        // убираем первый и добавляем новый
+        return [...prev.slice(1), product];
+      }
+      return [...prev, product];
+    });
+  };
+  const removeFromComparison = (id) => setComparison(prev => prev.filter(i => i.id !== id));
+  const clearComparison       = ()   => setComparison([]);
+  const isInComparison        = (id) => comparison.some(i => i.id === id);
+  const toggleComparison      = (product) => {
+    if (isInComparison(product.id)) removeFromComparison(product.id);
+    else addToComparison(product);
+  };
 
   // === МОДАЛКА ===
-  const openProductModal = (product) => setSelectedProduct(product);
-  const closeProductModal = () => setSelectedProduct(null);
+  const openProductModal  = (product) => setSelectedProduct(product);
+  const closeProductModal = ()        => setSelectedProduct(null);
 
   return (
     <ShopContext.Provider value={{
-      cart,
-      favorites,
-      addToCart,
-      updateQuantity,
-      removeFromCart,
-      getQuantity,
-      toggleFavorite,
-      isFavorite,
-      selectedProduct,
-      openProductModal,
-      closeProductModal,
-      totalItems: cart.reduce((sum, item) => sum + item.quantity, 0)
+      cart, favorites, comparison,
+      addToCart, updateQuantity, removeFromCart, getQuantity,
+      toggleFavorite, isFavorite,
+      toggleComparison, isInComparison, removeFromComparison, clearComparison,
+      selectedProduct, openProductModal, closeProductModal,
+      totalItems: cart.reduce((s, i) => s + i.quantity, 0),
     }}>
       {children}
     </ShopContext.Provider>
