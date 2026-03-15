@@ -103,3 +103,35 @@
 .cart-btn:hover {
   background: #1565c0;
 }
+
+.cart-counter {
+  display: flex;
+  align-items: center;
+  border: 2px solid #1976d2;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.counter-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.counter-btn:hover {
+  background: #f0f0f0;
+}
+
+.counter-value {
+  padding: 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}

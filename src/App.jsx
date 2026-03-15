@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import { ShopProvider } from './contexts/ShopContext';
-
 import News from './pages/News';
 import Delivery from './pages/Delivery';
 import Payment from './pages/Payment';
@@ -16,6 +15,7 @@ import Contacts from './pages/Contacts';
 import Catalog from './pages/Catalog';
 import Warranty from './pages/Warranty';
 import Products from './pages/Products';
+import ProductModal from './components/Products/ProductModal';   // ← добавь импорт
 import ProductCard from './components/Products/ProductCard';
 
 function App() {
@@ -39,8 +39,10 @@ function App() {
           <Route path="/contacts" element={<Contacts/>} />
           <Route path="/products" element={<Products />} /> 
         </Routes>
+        <ProductModal />
       </ShopProvider>
     </Router>
+    
   );
 }
 

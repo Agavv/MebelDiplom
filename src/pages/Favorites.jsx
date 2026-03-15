@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { ShopContext } from '../contexts/ShopContext';
 import ProductCard from '../components/Products/ProductCard';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function Favorites() {
   const { favorites } = useContext(ShopContext);
@@ -14,12 +15,12 @@ export default function Favorites() {
 
       {favorites.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 10 }}>
-          <Typography variant="h5" sx={{ color: '#777', mb: 2 }}>
-            Вы ещё ничего не добавили в избранное
+          <Typography variant="h5" sx={{ color: '#777' }}>
+            Пока ничего не добавлено
           </Typography>
-          <Typography variant="body1" sx={{ color: '#999' }}>
-            Нажмите на сердечко на любом товаре
-          </Typography>
+          <Button component={Link} to="/products" variant="contained" sx={{ mt: 3 }}>
+            Перейти в каталог
+          </Button>
         </Box>
       ) : (
         <div className="products-grid">
